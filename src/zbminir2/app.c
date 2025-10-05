@@ -34,7 +34,8 @@
 #define led_turn_off(led) sl_led_turn_off(led)
 #define led_toggle(led) sl_led_toggle(led)
 #define COMMISSIONING_STATUS_LED (&sl_led_led0)
-#define ON_OFF_LIGHT_LED         (&sl_led_relay)
+#define RELAY0         (&sl_led_relay0)
+#define RELAY1         (&sl_led_relay1)
 #else // !SL_CATALOG_LED0_PRESENT
 #define led_turn_on(led)
 #define led_turn_off(led)
@@ -203,31 +204,39 @@ void sl_zigbee_af_network_steering_complete_cb(sl_status_t status,
  * the attribute was set by the framework.
  */
 void sl_zigbee_af_post_attribute_change_cb(uint8_t endpoint,
-                                           sl_zigbee_af_cluster_id_t clusterId,
-                                           sl_zigbee_af_attribute_id_t attributeId,
-                                           uint8_t mask,
-                                           uint16_t manufacturerCode,
-                                           uint8_t type,
-                                           uint8_t size,
-                                           uint8_t* value)
+		sl_zigbee_af_cluster_id_t clusterId,
+		sl_zigbee_af_attribute_id_t attributeId,
+		uint8_t mask,
+		uint16_t manufacturerCode,
+		uint8_t type,
+		uint8_t size,
+		uint8_t* value)
 {
-  if (clusterId == ZCL_ON_OFF_CLUSTER_ID
-      && attributeId == ZCL_ON_OFF_ATTRIBUTE_ID
-      && mask == CLUSTER_MASK_SERVER) {
-    bool onOff;
-    if (sl_zigbee_af_read_server_attribute(endpoint,
-                                           ZCL_ON_OFF_CLUSTER_ID,
-                                           ZCL_ON_OFF_ATTRIBUTE_ID,
-                                           (uint8_t *)&onOff,
-                                           sizeof(onOff))
-        == SL_ZIGBEE_ZCL_STATUS_SUCCESS) {
-      if (onOff) {
-        led_turn_on(ON_OFF_LIGHT_LED);
-      } else {
-        led_turn_off(ON_OFF_LIGHT_LED);
-      }
-    }
-  }
+	if (clusterId == ZCL_ON_OFF_CLUSTER_ID
+			&& attributeId == ZCL_ON_OFF_ATTRIBUTE_ID
+			&& mask == CLUSTER_MASK_SERVER) {
+		bool onOff;
+		if (sl_zigbee_af_read_server_attribute(endpoint,
+					ZCL_ON_OFF_CLUSTER_ID,
+					ZCL_ON_OFF_ATTRIBUTE_ID,
+					(uint8_t *)&onOff,
+					sizeof(onOff))
+				== SL_ZIGBEE_ZCL_STATUS_SUCCESS) {
+			if (endpoint == 1) {
+				if (onOff) {
+					led_turn_on(RELAY0);
+				} else {
+					led_turn_off(RELAY0);
+				}
+			} else if (endpoint == 2) {
+				if (onOff) {
+					led_turn_on(RELAY1);
+				} else {
+					led_turn_off(RELAY1);
+				}
+			}
+		}
+	}
 }
 
 /** @brief On/off Cluster Server Post Init
@@ -250,6 +259,7 @@ void sl_zigbee_af_on_off_cluster_server_post_init_cb(uint8_t endpoint)
                                         0,
                                         NULL);
 }
+
 
 /** @brief
  *
