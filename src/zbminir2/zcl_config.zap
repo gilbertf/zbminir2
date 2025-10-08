@@ -33,8 +33,8 @@
       "version": "zigbee-v0"
     },
     {
-      "pathRelativity": "resolveEnvVars",
-      "path": "$CLUSTER_XML",
+      "pathRelativity": "relativeToZap",
+      "path": "..\\..\\..\\mfg-specific-cluster.xml",
       "type": "zcl-xml-standalone"
     }
   ],
@@ -176,7 +176,7 @@
               "storageOption": "RAM",
               "singleton": 1,
               "bounded": 0,
-              "defaultValue": "MINI-ZBRS-MOD",
+              "defaultValue": "ZBMINIR2",
               "reportable": 0,
               "minInterval": 1,
               "maxInterval": 65534,
@@ -1347,14 +1347,6 @@
       "endpointTypeIndex": 0,
       "profileId": 260,
       "endpointId": 1,
-      "networkId": 0,
-      "parentEndpointIdentifier": null
-    },
-    {
-      "endpointTypeName": "Centralized",
-      "endpointTypeIndex": 0,
-      "profileId": 260,
-      "endpointId": 2,
       "networkId": 0,
       "parentEndpointIdentifier": null
     }
