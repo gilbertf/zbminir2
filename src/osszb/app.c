@@ -34,6 +34,7 @@
 #define led_turn_off(led) sl_led_turn_off(led)
 #define led_toggle(led) sl_led_toggle(led)
 #define COMMISSIONING_STATUS_LED (&sl_led_led0)
+#define RELAY         (&sl_led_relay)
 #define RELAY0         (&sl_led_relay0)
 #define RELAY1         (&sl_led_relay1)
 #else // !SL_CATALOG_LED0_PRESENT
@@ -222,6 +223,13 @@ void sl_zigbee_af_post_attribute_change_cb(uint8_t endpoint,
 					(uint8_t *)&onOff,
 					sizeof(onOff))
 				== SL_ZIGBEE_ZCL_STATUS_SUCCESS) {
+#if SL_MODULE_RELAYS == 1
+				if (onOff) {
+					led_turn_on(RELAY);
+				} else {
+					led_turn_off(RELAY);
+				}
+#elif SL_MODULE_RELAYS == 2
 			if (endpoint == 1) {
 				if (onOff) {
 					led_turn_on(RELAY0);
@@ -235,6 +243,7 @@ void sl_zigbee_af_post_attribute_change_cb(uint8_t endpoint,
 					led_turn_off(RELAY1);
 				}
 			}
+#endif
 		}
 	}
 }

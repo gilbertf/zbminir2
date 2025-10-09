@@ -1,7 +1,7 @@
 # Silicon Labs Project Configuration Tools: slcp, v0, Component selection file.
 project_name: zbminir2
 label: zbminir2
-description: Open source firmware for MINI-ZBRS-MOD
+description: Open source firmware for ZBMINIR2
 category: Zigbee Application
 filter:
 - name: Device Type
@@ -28,7 +28,7 @@ component:
   id: iostream_usart
 - instance: [btn_button, btn_switch]
   id: simple_button
-- instance: [led0, relay0, relay1]
+- instance: [led0, relay]
   id: simple_led
 - {id: zigbee_application_bootloader}
 - {id: zigbee_basic}
@@ -64,13 +64,11 @@ component:
 - {id: zigbee_zll_scenes_server}
 - {id: zigbee_zll_utility_server}
 config_file:
-- {path: zcl_config.zap, directory: zcl}
+- {path: zcl_config_zbminir2.zap, directory: zcl}
 - path: include/sl_iostream_usart_inst_config.h
   override: {component: iostream_usart, instance: inst, file_id: iostream_usart_config}
-- path: include/sl_simple_led_relay0_config.h
-  override: {component: simple_led, instance: relay0, file_id: simple_led_config}
-- path: include/sl_simple_led_relay1_config.h
-  override: {component: simple_led, instance: relay1, file_id: simple_led_config}
+- path: include/sl_simple_led_relay_config.h
+  override: {component: simple_led, instance: relay, file_id: simple_led_config}
 - path: include/sl_simple_led_led0_config.h
   override: {component: simple_led, instance: led0, file_id: simple_led_config}
 - path: include/sl_simple_button_btn_button_config.h
@@ -79,6 +77,7 @@ config_file:
   override: {component: simple_button, instance: btn_switch, file_id: simple_button_config}
 configuration:
 - {name: SL_BOARD_ENABLE_VCOM, value: '1'}
+- {name: SL_MODULE_RELAYS, value: '1'}
 - condition: [iostream_usart]
   name: SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE
   value: usartHwFlowControlCtsAndRts

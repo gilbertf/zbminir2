@@ -105,14 +105,18 @@ build_gw zigbee_z3_gateway
 gen_build_config src/bootloader/bootloader-storage-internal-single-768k.slcp $TARGET
 build bootloader-storage-internal-single-768k
 
-# main firmware
-gen_build_config src/zbminir2/zbminir2.slcp $TARGET
-
-# for development - avoids having to call slc generate after making changes
-cp src/zbminir2/*.c build/zbminir2/
-build zbminir2
-
-create_ota build/bootloader-storage-internal-single-768k.s37 build/zbminir2.s37 2
+for MODULE in zbminir2 mini-zbrs-sw
+do
+	echo Preparing firmware for $MODULE
+	# main firmware
+	gen_build_config src/osszb/$MODULE.slcp $TARGET
+	
+	# for development - avoids having to call slc generate after making changes
+	cp src/osszb/*.c build/$MODULE/
+	build $MODULE
+	
+	create_ota build/bootloader-storage-internal-single-768k.s37 build/$MODULE.s37 2
+done
 
 if [ "$1" = "flash" ]; then
 	flash ./build/bootloader-storage-internal-single-768k.bin 0
