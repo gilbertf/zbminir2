@@ -33,8 +33,8 @@
       "version": "zigbee-v0"
     },
     {
-      "pathRelativity": "relativeToZap",
-      "path": "..\\..\\..\\mfg-specific-cluster.xml",
+      "pathRelativity": "resolveEnvVars",
+      "path": "$CLUSTER_XML",
       "type": "zcl-xml-standalone"
     }
   ],
